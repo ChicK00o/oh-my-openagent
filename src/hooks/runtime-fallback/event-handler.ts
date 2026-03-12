@@ -130,7 +130,7 @@ export function createEventHandler(deps: HookDeps, helpers: AutoRetryHelpers) {
     }
 
     let state = sessionStates.get(sessionID)
-    const fallbackModels = getFallbackModelsForSession(sessionID, resolvedAgent, pluginConfig)
+    const fallbackModels = getFallbackModelsForSession(sessionID, resolvedAgent, pluginConfig, config.cooldown_seconds)
 
     if (fallbackModels.length === 0) {
       log(`[${HOOK_NAME}] No fallback models configured`, { sessionID, agent })

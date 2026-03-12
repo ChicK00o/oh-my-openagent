@@ -15,6 +15,7 @@ export function createSessionStatusHandler(
   sessionStatusRetryKeys: Map<string, string>,
 ) {
   const {
+    config,
     pluginConfig,
     sessionStates,
     sessionLastAccess,
@@ -45,7 +46,7 @@ export function createSessionStatusHandler(
     }
 
     const resolvedAgent = await helpers.resolveAgentForSessionFromContext(sessionID, agent)
-    const fallbackModels = getFallbackModelsForSession(sessionID, resolvedAgent, pluginConfig)
+    const fallbackModels = getFallbackModelsForSession(sessionID, resolvedAgent, pluginConfig, config.cooldown_seconds)
     if (fallbackModels.length === 0) {
       if (!sessionStates.has(sessionID)) {
         sessionStatusRetryKeys.delete(sessionID)

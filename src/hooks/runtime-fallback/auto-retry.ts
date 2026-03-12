@@ -72,7 +72,7 @@ export function createAutoRetryHelpers(deps: HookDeps) {
         state.pendingFallbackModel = undefined
       }
 
-      const fallbackModels = getFallbackModelsForSession(sessionID, resolvedAgent, pluginConfig)
+      const fallbackModels = getFallbackModelsForSession(sessionID, resolvedAgent, pluginConfig, config.cooldown_seconds)
       if (fallbackModels.length === 0) return
 
       log(`[${HOOK_NAME}] Session fallback timeout reached`, {

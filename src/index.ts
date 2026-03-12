@@ -13,6 +13,7 @@ import { loadPluginConfig } from "./plugin-config"
 import { createModelCacheState } from "./plugin-state"
 import { createFirstMessageVariantGate } from "./shared/first-message-variant"
 import { injectServerAuthIntoClient, log } from "./shared"
+import { configureRetryDelegation } from "./shared/retry-delegation"
 import { startTmuxCheck } from "./tools"
 
 let activePluginDispose: PluginDispose | null = null
@@ -25,6 +26,9 @@ const OhMyOpenCodePlugin: Plugin = async (ctx) => {
   })
 
   injectServerAuthIntoClient(ctx.client)
+  
+  // Configure OpenCode to delegate retry logic to this plugin
+  await configureRetryDelegation()
   startTmuxCheck()
   await activePluginDispose?.()
 

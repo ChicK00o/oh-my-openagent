@@ -1,6 +1,6 @@
 import type { AutoRetryHelpers } from "./auto-retry"
 import type { HookDeps, FallbackState } from "./types"
-import { HOOK_NAME } from "./constants"
+import { HOOK_NAME, blacklistProvider } from "./constants"
 import { log } from "../../shared/logger"
 import { prepareFallback } from "./fallback-state"
 
@@ -17,6 +17,18 @@ export async function dispatchFallbackRetry(
   helpers: AutoRetryHelpers,
   options: DispatchFallbackRetryOptions,
 ): Promise<void> {
+  // Blacklist the current model's provider globally before preparing fallback
+  const currentModelProvider = options.state.currentModel.split("/")[0]
+  if (currentModelProvider) {
+    blacklistProvider(currentModelProvider)
+    log(`[${HOOK_NAME}] Blacklisted provider due to retry`, { 
+      sessionID: options.sessionID,
+      provider: currentModelProvider,
+      model: options.state.currentModel,
+      source: options.source,
+    })
+  }
+
   const result = prepareFallback(
     options.sessionID,
     options.state,

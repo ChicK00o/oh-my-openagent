@@ -1,4 +1,4 @@
-import { DEFAULT_CONFIG, RETRYABLE_ERROR_PATTERNS } from "./constants"
+import { DEFAULT_CONFIG, RETRYABLE_ERROR_PATTERNS, ENHANCED_RETRYABLE_PATTERNS } from "./constants"
 
 export function getErrorMessage(error: unknown): string {
   if (!error) return ""
@@ -176,4 +176,8 @@ export function isRetryableError(error: unknown, retryOnErrors: number[]): boole
   }
 
   return RETRYABLE_ERROR_PATTERNS.some((pattern) => pattern.test(message))
+  // Also check enhanced patterns
+  if (ENHANCED_RETRYABLE_PATTERNS.some((pattern) => pattern.test(message))) {
+    return true;
+  }
 }
